@@ -9,55 +9,26 @@ namespace Properties
     /// </summary>
     public class DeckFactory
     {
-        private string[] seeds;
+        public string[] Seeds { get; set; }
 
-        private string[] names;
+        public string[] Names { get; set; }
+        
+        public int GetDeckSize() => this.Names.Length * this.Seeds.Length;
 
-        // TODO improve
-        public IList<string> GetSeeds()
+        public IEnumerable<Card> GetDeck()
         {
-            return this.seeds.ToList();
-        }
-
-        // TODO improve
-        public void SetSeeds(IList<string> seeds)
-        {
-            this.seeds = seeds.ToArray();
-        }
-
-        // TODO improve
-        public IList<string> GetNames()
-        {
-            return this.names.ToList();
-        }
-
-        // TODO improve
-        public void SetNames(IList<string> names)
-        {
-            this.names = names.ToArray();
-        }
-
-        // TODO improve
-        public int GetDeckSize()
-        {
-            return this.names.Length * this.seeds.Length;
-        }
-
-        /// TODO improve
-        public ISet<Card> GetDeck()
-        {
-            if (this.names == null || this.seeds == null)
+            if (this.Names == null || this.Seeds == null)
             {
                 throw new InvalidOperationException();
             }
 
             return new HashSet<Card>(Enumerable
-                .Range(0, this.names.Length)
+                .Range(0, this.Names.Length)
                 .SelectMany(i => Enumerable
-                    .Repeat(i, this.seeds.Length)
+                    .Repeat(i, this.Seeds.Length)
                     .Zip(
-                        Enumerable.Range(0, this.seeds.Length),
-                        (n, s) => Tuple.Create(this.names[n], this.seeds[s], n)))
+                        Enumerable.Range(0, this.Seeds.Length),
+                        (n, s) => Tuple.Create(this.Names[n], this.Seeds[s], n)))
                 .Select(tuple => new Card(tuple))
                 .ToList());
         }
